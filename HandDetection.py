@@ -34,7 +34,7 @@ with mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5) a
         # Move the mouse cursor to the right side of the screen
         autopy.mouse.move(offset_x, 0)
 
-        if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
+        if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'Esc' to exit
             break
 
 cap.release()
