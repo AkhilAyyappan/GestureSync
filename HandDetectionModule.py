@@ -2,12 +2,16 @@ import math
 import time
 import cv2
 import mediapipe as mp
+<<<<<<< HEAD
 import numpy as np
 # for volume control
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 # for brightness control
 import screen_brightness_control as sbc
+=======
+
+>>>>>>> origin/avani
 
 class HandDetection:
     def __init__(self, mode=False, max_hands=2, model_complexity=1,
@@ -28,8 +32,11 @@ class HandDetection:
                                          self.model_complexity, self.detection_confidence,
                                          self.tracking_confidence)
         self.mp_drawing = mp.solutions.drawing_utils
+<<<<<<< HEAD
         self.bbox = []
         self.fingers = None
+=======
+>>>>>>> origin/avani
 
     def find_hands(self, image, draw=True):
         # Convert the image to RGB format
@@ -49,7 +56,11 @@ class HandDetection:
     def find_position(self, image, hand_no=0, draw=True):
         list_x = []
         list_y = []
+<<<<<<< HEAD
 
+=======
+        bbox = []
+>>>>>>> origin/avani
         self.list_of_lm = []
         if self.results.multi_hand_landmarks:
             # select a hand
@@ -67,6 +78,7 @@ class HandDetection:
                     cv2.circle(image, (cx, cy), 5, (255, 0, 255), 1)
             x_min, x_max = min(list_x), max(list_x)
             y_min, y_max = min(list_y), max(list_y)
+<<<<<<< HEAD
             self.bbox = [x_min, y_min, x_max, y_max]
             if draw:
                 cv2.rectangle(image, (self.bbox[0] - 10, self.bbox[1] - 10), (self.bbox[2] + 10, self.bbox[3] + 10),
@@ -87,6 +99,39 @@ class HandDetection:
             else:
                 self.fingers.append(0)
         return self.fingers
+=======
+            bbox = [x_min, y_min, x_max, y_max]
+            if draw:
+                cv2.rectangle(image, (bbox[0] - 10, bbox[1] - 10), (bbox[2] + 10, bbox[3] + 10), (0, 255, 0), 2)
+        return self.list_of_lm, bbox, image
+
+    # def fingers_up(self):
+    #     fingers = []
+    #     # Thumb
+    #     if self.list_of_lm[self.tipIds[0]][1] > self.list_of_lm[self.tipIds[0] - 1][1]:
+    #         fingers.append(1)
+    #     else:
+    #         fingers.append(0)
+    #     # 4 Fingers
+    #     for ID in range(1, 5):
+    #         if self.list_of_lm[self.tipIds[ID]][2] < self.list_of_lm[self.tipIds[ID] - 2][2]:
+    #             fingers.append(1)
+    #         else:
+    #             fingers.append(0)
+    #     return fingers
+
+    def fingers_up(self):
+        fingers = [0, 0, 0, 0, 0]  # Initialize with zeros for all fingers
+        if self.list_of_lm:
+            # Thumb
+            if self.list_of_lm[self.tipIds[0]][1] > self.list_of_lm[self.tipIds[0] - 1][1]:
+                fingers[0] = 1
+            # 4 Fingers
+            for ID in range(1, 5):
+                if self.list_of_lm[self.tipIds[ID]][2] < self.list_of_lm[self.tipIds[ID] - 2][2]:
+                    fingers[ID] = 1
+        return fingers
+>>>>>>> origin/avani
 
     def show_fps(self, image):
         # Calculate FPS (frames per second)
@@ -118,6 +163,7 @@ class HandDetection:
 
         return image, distance, [x1, y1, x2, y2, cx, cy]
 
+<<<<<<< HEAD
     def volume_controller(self, image, draw=True):
         devices = AudioUtilities.GetSpeakers()
         interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
@@ -234,16 +280,29 @@ def main():
     except Exception as e:
         print("Error opening webcam:", e)
         exit()
+=======
+
+def main():
+    # Set webcam width and height for desired resolution
+    webcam_width, webcam_height = 640, 480
+
+    cap = cv2.VideoCapture(0)  # Use 0 for default webcam
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, webcam_width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, webcam_height)
+>>>>>>> origin/avani
 
     detector = HandDetection()
 
     while True:
         success, image = cap.read()
 
+<<<<<<< HEAD
         if not success:
             print("Error reading frame from webcam")
             break
 
+=======
+>>>>>>> origin/avani
         # Pass image to the `find_hands` method for processing
         image = detector.find_hands(image)
 
@@ -252,11 +311,20 @@ def main():
         # print hand landmark to terminal
         list_of_lm, bbox, image = detector.find_position(image, 0, True)
         if len(list_of_lm):
+<<<<<<< HEAD
             detector.fingers_up()
 
         image = detector.volume_controller(image)
 
         image = detector.brightness_controller(image)
+=======
+            # can choose a certain landmark
+            # print(list_of_lm[4])
+            finger_up = detector.fingers_up()
+            fingers = sum(finger_up)
+            if len(finger_up):
+                print(f'{fingers} are up')
+>>>>>>> origin/avani
 
         # Display the image
         cv2.imshow("Image", image)
