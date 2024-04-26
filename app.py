@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk  # Add this line
+from PIL import Image, ImageTk
 import cv2
 import numpy as np
-from HandTrackingModule import HandDetection  # Assuming hand detection code is in a separate file
+import pyautogui  # Add this line for cursor movement
+from HandTrackingModule import HandDetection
 
 class HandControlApp:
     def __init__(self, root, cap):
@@ -47,10 +48,11 @@ class HandControlApp:
             image = detector.brightness_controller(image)
 
             # Cursor movement
-            detector.cursor_move(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH), self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            image = detector.cursor_move(image, self.cap.get(cv2.CAP_PROP_FRAME_WIDTH), self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # Pass frame width and height
 
             # Click function
             detector.click()
+            detector.scroll()
 
             # Update the canvas with the processed image
             self.display_image(image)
@@ -71,6 +73,9 @@ class HandControlApp:
         imgtk = ImageTk.PhotoImage(image=img)
         self.canvas.imgtk = imgtk
         self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
+
+
+
 
 def main():
     # Set webcam width and height for desired resolution
