@@ -64,7 +64,8 @@ while True:
                 autopy.mouse.click(autopy.mouse.Button.RIGHT)
                 action_time = time.time()  # Record the time of the action
 
-        # 5. Three Fingers are up: Scroll Mode
+
+        # 5. Three Fingers are up: Scroll Mode `
         elif fingers[0] == 1 and fingers[1] == 1 and fingers[2] == 1:
             mode = "scroll"
             x1, y1 = lmList[8][1:]
